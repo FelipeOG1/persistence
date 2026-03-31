@@ -31,18 +31,22 @@ void read_input(InputBuffer* buffer) {
 
 void print_db() { printf("db >"); }
 void print_buffer(InputBuffer* buffer) { printf("contentd: %s, size: %zu\n", buffer->buffer, buffer->input_len); }
-
+void close_input_buffer(InputBuffer* buffer) {
+    free(buffer->buffer);
+    free(buffer);
+}
 void start_repl() {
     for (;;) {
         
-        InputBuffer* buffer = new_input_buffer();
+        InputBuffer* input_buffer = new_input_buffer();
         print_db();
-        read_input(buffer);
-        if (strcmp(buffer->buffer, ".exit") == 0) {
+        read_input(input_buffer);
+        if (strcmp(input_buffer->buffer, "exit") == 0) {
+            close_input_buffer(input_buffer);
             break;
         }
         
-        print_buffer(buffer);
+        print_buffer(input_buffer);
 
     }
 }
