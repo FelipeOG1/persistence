@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 typedef struct {
     char* buffer;
     size_t buffer_len;
@@ -29,20 +29,27 @@ void read_input(InputBuffer* buffer) {
    
 }
 
-
 void print_db() { printf("db >"); }
-int main() {
+void print_buffer(InputBuffer* buffer) { printf("contentd: %s, size: %zu\n", buffer->buffer, buffer->input_len); }
 
-    InputBuffer* input_buffer =  new_input_buffer();
-    
-    for ( ;; ) {
+void start_repl() {
+    for (;;) {
+        
+        InputBuffer* buffer = new_input_buffer();
         print_db();
-        read_input(input_buffer);
-        printf("%s\n", input_buffer->buffer);
+        read_input(buffer);
+        if (strcmp(buffer->buffer, ".exit") == 0) {
+            break;
+        }
+        
+        print_buffer(buffer);
 
     }
-   
-    
+}
+int main() {
+
+      
+    start_repl();
     return 0;
 }
 
