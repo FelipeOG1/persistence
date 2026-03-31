@@ -17,8 +17,22 @@ InputBuffer* new_input_buffer() {
     
     return input_buffer;
 }
+
+
+
+
+void print_db() { printf("db >"); }
 int main() {
-    printf("%d", x);
+
+    InputBuffer* input_buffer =  new_input_buffer();
+    
+    for ( ;; ) {
+        print_db();    
+        size_t bytes_read = getline(&input_buffer->buffer, &input_buffer->buffer_len, stdin);
+        
+    }
+   
+    
     return 0;
 }
 
