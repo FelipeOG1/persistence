@@ -61,6 +61,20 @@ MetaCommandResult handle_meta_command(InputBuffer* buffer) {
     
 }
 
+PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
+    if (strcmp(input_buffer->buffer, "insert") == 0) {
+        statement->type = STATEMENT_INSERT;
+        return PREPARE_SUCCESS;  
+    }
+    if (strcmp(input_buffer->buffer, "select") == 0) {
+        statement->type = STATEMENT_SELECT;
+        return PREPARE_SUCCESS;
+    }
+
+    return PREPARE_UNRECOGNIZED_STATEMENT;
+
+}
+
 void start_repl() {
     for (;;) {
         
@@ -80,9 +94,9 @@ void start_repl() {
         
         }
 
-        
 
-   
+            
+
     }
 
 }
