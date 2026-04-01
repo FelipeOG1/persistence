@@ -30,11 +30,6 @@ void read_input(InputBuffer* buffer) {
     buffer->buffer[bytes_read - 1] = 0;//eliminate /n character
 }
 
-//commands handlers
-bool is_command(InputBuffer* input_buffer) {
-    return input_buffer->buffer[0] == '.';
-}
-
 void print_db() { printf("db >"); }
 void print_buffer(InputBuffer* buffer) { printf("contentd: %s, size: %zu\n", buffer->buffer, buffer->input_len); }
 void close_input_buffer(InputBuffer* buffer) {
@@ -42,6 +37,9 @@ void close_input_buffer(InputBuffer* buffer) {
     free(buffer);
 }
 
+void handle_meta_command(InputBuffer* buffer) {
+    
+}
 
 void start_repl() {
     for (;;) {
@@ -50,17 +48,14 @@ void start_repl() {
         print_db();
         read_input(input_buffer);
 
-        if (is_command(input_buffer)) {
-            if (strcmp(input_buffer->buffer, ".exit") == 0) {
-                close_input_buffer(input_buffer);
-                break;
-            } else {
-               printf("NOT VALID COMMAND\n");
-            }
-   
+        if (input_buffer->buffer[0] == '.') {
+            handle_meta_command(input_buffer);
+        
         }
-            
+   
+    
     }
+
 }
 int main() {
 
