@@ -87,15 +87,22 @@ void start_repl() {
                 case (META_COMMNAD_SUCCESS):
                     continue;
                 case (META_COMMAND_UNRECOGNIZED_COMMAND):
-                    printf("Unrecognized command\n");
+                    printf("Unrecognized command: %s\n", input_buffer->buffer);
                     continue;
 
             }
         
         }
 
-
-            
+        Statement statement;
+        switch (prepare_statement(input_buffer, &statement)) {
+            case PREPARE_SUCCESS:
+                break;
+            case PREPARE_UNRECOGNIZED_STATEMENT:
+                printf("Unrecognized statement: %s\n", input_buffer->buffer);
+                continue;
+                
+        }
 
     }
 
