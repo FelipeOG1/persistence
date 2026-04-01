@@ -11,6 +11,20 @@ typedef struct {
 } InputBuffer;
 
 
+typedef enum {
+    META_COMMNAD_SUCCESS,
+    META_COMMAND_UNRECOGNIZED_COMMAND,
+} MetaCommandResult;
+
+typedef enum { PREPARE_SUCCESS, PREPARE_UNRECOGNIZED_STATEMENT } PrepareResult;
+
+
+typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
+
+typedef struct {
+  StatementType type;
+} Statement;
+
 InputBuffer* new_input_buffer() {
     InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer)); 
     input_buffer->buffer = NULL;
@@ -37,7 +51,13 @@ void close_input_buffer(InputBuffer* buffer) {
     free(buffer);
 }
 
-void handle_meta_command(InputBuffer* buffer) {
+MetaCommandResult handle_meta_command(InputBuffer* buffer) {
+    if (strcmp(buffer->buffer, ".exit") == 0) {
+        exit(EXIT_SUCCESS);
+        
+    } else {
+        return META_COMMAND_UNRECOGNIZED_COMMAND;
+    }
     
 }
 
@@ -49,11 +69,20 @@ void start_repl() {
         read_input(input_buffer);
 
         if (input_buffer->buffer[0] == '.') {
-            handle_meta_command(input_buffer);
+            switch(handle_meta_command(input_buffer)) {
+                case (META_COMMNAD_SUCCESS):
+                    continue;
+                case (META_COMMAND_UNRECOGNIZED_COMMAND):
+                    printf("Unrecognized command\n");
+                    continue;
+
+            }
         
         }
+
+        
+
    
-    
     }
 
 }
