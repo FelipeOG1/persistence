@@ -3,6 +3,12 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+
+
+#define USERNAME_SIZE 32
+#define EMAIL_SIZE 255
+
 typedef struct {
     char* buffer;
     size_t buffer_len;
@@ -12,9 +18,9 @@ typedef struct {
 
 typedef struct {
 	int id;
-	char* username;
-	char* email;
-} Row
+	char username[USERNAME_SIZE];
+	char* email[EMAIL_SIZE];
+} Row;
 
 typedef enum {
     META_COMMNAD_SUCCESS,
@@ -28,6 +34,8 @@ typedef enum { STATEMENT_INSERT, STATEMENT_SELECT, STATEMENT_DELETE } StatementT
 
 typedef struct {
   StatementType type;
+  Row row_to_insert;
+
 } Statement;
 
 InputBuffer* new_input_buffer() {
@@ -65,12 +73,20 @@ MetaCommandResult handle_meta_command(InputBuffer* buffer) {
     } else {
         return META_COMMAND_UNRECOGNIZED_COMMAND;
     }
-    
 }
 
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
     if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
         statement->type = STATEMENT_INSERT;
+		int args_count = sscanf(input_buffer->buffer, "insert %d %255s %32s", &(statement->row_to_insert.id), 
+								statement->row_to_insert.email, statement->row_to_insert.username);
+
+		printf("args count: %d", args_count);
+		
+
+		if (args_count < 0) { exit(EXIT_FAILURE);}
+		
+		
         return PREPARE_SUCCESS;  
     }
     if (strcmp(input_buffer->buffer, "select") == 0) {
@@ -86,13 +102,11 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 
 }
 
-void execute_statement(Statement* statement) {
-	switch(statement->type) {
+void execute_statement(Statement* statement) { switch(statement->type) {
 		case (STATEMENT_INSERT):
-			printf("handle insert");
 			break;
 		case(STATEMENT_SELECT):
-			printf("handle select");
+			printf("handle select\n");
 			break;
 			
 	}
