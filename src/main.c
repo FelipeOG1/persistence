@@ -137,7 +137,7 @@ void start_repl() {
                 printf("Unrecognized statement: %s\n", input_buffer->buffer);
                 continue;
 			case PREPARE_SYNTAX_ERROR:
-				printf("syntax error on statement%s\n", input_buffer->buffer);
+				printf("syntax error on statement: %s\n", input_buffer->buffer);
 				continue;
                 
         }
