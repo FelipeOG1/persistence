@@ -62,7 +62,7 @@ MetaCommandResult handle_meta_command(InputBuffer* buffer) {
 }
 
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
-    if (strcmp(input_buffer->buffer, "insert") == 0) {
+    if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
         statement->type = STATEMENT_INSERT;
         return PREPARE_SUCCESS;  
     }
@@ -124,6 +124,8 @@ void start_repl() {
     }
 
 }
+
+
 int main() {
     start_repl();
     return 0;
