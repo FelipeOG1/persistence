@@ -19,7 +19,7 @@ typedef enum {
 typedef enum { PREPARE_SUCCESS, PREPARE_UNRECOGNIZED_STATEMENT } PrepareResult;
 
 
-typedef enum { STATEMENT_INSERT, STATEMENT_SELECT } StatementType;
+typedef enum { STATEMENT_INSERT, STATEMENT_SELECT, STATEMENT_DELETE } StatementType;
 
 typedef struct {
   StatementType type;
@@ -70,9 +70,25 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
         statement->type = STATEMENT_SELECT;
         return PREPARE_SUCCESS;
     }
+	if (strcmp(input_buffer->buffer, "delete") == 0) {
+		statement->type = STATEMENT_DELETE;
+		return PREPARE_SUCCESS;
+	}
 
     return PREPARE_UNRECOGNIZED_STATEMENT;
 
+}
+
+void execute_statement(Statement* statement) {
+	switch(statement->type) {
+		case (STATEMENT_INSERT):
+			printf("handle insert");
+			break;
+		case(STATEMENT_SELECT):
+			printf("handle select");
+			break;
+			
+	}
 }
 
 void start_repl() {
@@ -97,6 +113,7 @@ void start_repl() {
         Statement statement;
         switch (prepare_statement(input_buffer, &statement)) {
             case PREPARE_SUCCESS:
+				execute_statement(&statement);
                 break;
             case PREPARE_UNRECOGNIZED_STATEMENT:
                 printf("Unrecognized statement: %s\n", input_buffer->buffer);
@@ -108,8 +125,6 @@ void start_repl() {
 
 }
 int main() {
-
-      
     start_repl();
     return 0;
 }
