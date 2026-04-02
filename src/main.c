@@ -3,11 +3,9 @@
 #include <string.h>
 #include <stdbool.h>
 
-
-
-
 #define USERNAME_SIZE 32
 #define EMAIL_SIZE 255
+#define MAX_PAGES 100
 
 typedef struct {
     char* buffer;
@@ -15,6 +13,9 @@ typedef struct {
     size_t input_len;
 
 } InputBuffer;
+
+
+
 
 typedef struct {
 	int id;
@@ -37,6 +38,19 @@ typedef struct {
   Row row_to_insert;
 
 } Statement;
+
+typedef struct {
+	Row* rows;
+	int rows_capacity;
+	size_t rows_size;
+} Page;
+
+Page* allocate_page() {
+	Page* new_page = (Page*)malloc(sizeof(Page));
+	new_page->rows_capacity = 20;
+	new_page->rows = malloc(sizeof(Row) * new_page->rows_capacity);
+	new_page->rows_size = 0;
+}
 
 InputBuffer* new_input_buffer() {
     InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer)); 
@@ -146,8 +160,9 @@ void start_repl() {
 
 }
 
-
 int main() {
+	Page** pages = malloc(sizeof(Page) * MAX_PAGES);
+	Page* page = allocate_page(); 
     start_repl();
     return 0;
 }
