@@ -10,6 +10,11 @@ typedef struct {
 
 } InputBuffer;
 
+typedef struct {
+	int id;
+	char* username;
+	char* email;
+} Row
 
 typedef enum {
     META_COMMNAD_SUCCESS,
@@ -45,7 +50,9 @@ void read_input(InputBuffer* buffer) {
 }
 
 void print_db() { printf("db >"); }
+
 void print_buffer(InputBuffer* buffer) { printf("contentd: %s, size: %zu\n", buffer->buffer, buffer->input_len); }
+
 void close_input_buffer(InputBuffer* buffer) {
     free(buffer->buffer);
     free(buffer);
