@@ -27,7 +27,7 @@ typedef enum {
     META_COMMAND_UNRECOGNIZED_COMMAND,
 } MetaCommandResult;
 
-typedef enum { PREPARE_SUCCESS, PREPARE_UNRECOGNIZED_STATEMENT } PrepareResult;
+typedef enum { PREPARE_SUCCESS, PREPARE_UNRECOGNIZED_STATEMENT, PREPARE_SYNTAX_ERROR } PrepareResult;
 
 
 typedef enum { STATEMENT_INSERT, STATEMENT_SELECT, STATEMENT_DELETE } StatementType;
@@ -81,11 +81,8 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 		int args_count = sscanf(input_buffer->buffer, "insert %d %255s %32s", &(statement->row_to_insert.id), 
 								statement->row_to_insert.email, statement->row_to_insert.username);
 
-		printf("args count: %d", args_count);
-		
-
 		if (args_count < 0) { exit(EXIT_FAILURE);}
-		
+		if (args_count < 3) { return PREPARE_SYNTAX_ERROR; }
 		
         return PREPARE_SUCCESS;  
     }
@@ -139,6 +136,9 @@ void start_repl() {
             case PREPARE_UNRECOGNIZED_STATEMENT:
                 printf("Unrecognized statement: %s\n", input_buffer->buffer);
                 continue;
+			case PREPARE_SYNTAX_ERROR:
+				printf("syntax error on statement%s\n", input_buffer->buffer);
+				continue;
                 
         }
 
