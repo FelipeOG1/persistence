@@ -162,7 +162,8 @@ void start_repl() {
 
 int main() {
 	Page** pages = malloc(sizeof(Page) * MAX_PAGES);
-	Page* page = allocate_page(); 
+	Page* page = allocate_page();
+	printf("%d", page->rows_capacity);
     start_repl();
     return 0;
 }
